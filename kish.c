@@ -8,6 +8,8 @@
 #include<unistd.h>
 #include<sys/wait.h>
 
+extern char ** environ;
+
 int main() {
 	while(1) {
 		printf("--kish--$ ");
@@ -21,19 +23,9 @@ int main() {
 		}
 		prompt[strlen(prompt) - 1] = 0;
 		if (strlen(prompt) > 0) {
-			pid_t cpid = fork();
-			switch(cpid) {
-				case -1:
-					perror("fork");
-					exit(EXIT_FAILURE);
-				case 0:
-					execlp(prompt, prompt, NULL);
-					fprintf(stderr,"%s\n", strerror(errno));
-					exit(EXIT_FAILURE);
-				default:
-					wait(NULL);
-					break;
-			}
+			char *argv[] = {prompt, NULL};
+			posix_spawnp(NULL, prompt, NULL, NULL, argv, environ);
+			wait(NULL);
 		}
 
 	}
