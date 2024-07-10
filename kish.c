@@ -10,6 +10,11 @@
 
 extern char ** environ;
 
+typedef struct {
+	char *k;
+	char *v;
+} path;
+
 int main() {
 	while(1) {
 		printf("--kish--$ ");
@@ -21,7 +26,12 @@ int main() {
 			}
 			break;
 		}
+
 		prompt[strlen(prompt) - 1] = 0;
+		if(strcmp(prompt, "exit") == 0) {
+			exit(0);
+		}
+
 		if (strlen(prompt) > 0) {
 			char *argv[] = {prompt, NULL};
 			posix_spawnp(NULL, prompt, NULL, NULL, argv, environ);
